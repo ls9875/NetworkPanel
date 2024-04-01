@@ -61,7 +61,7 @@ const provinceMatch=(str:string)=>{
 
 async function getLocalIp() {
     try {
-        const rsp = await fetch('//app.ljxnet.cn/network-panel/', {
+        const rsp = await fetch('https://api.mir6.com/api/ip_json', {
             method: "POST",
             mode: "cors",
             redirect: "follow",
