@@ -61,8 +61,14 @@ const provinceMatch=(str:string)=>{
 
 async function getLocalIp() {
     try {
-        const response = await  fetch('https://api.mir6.com/api/ip_json', { referrerPolicy: 'no-referrer' });
-        let resp = await response.json();
+        const rsp = await fetch('//app.ljxnet.cn/network-panel/', {
+            method: "POST",
+            mode: "cors",
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+            body: '{"action":"ip"}',
+        });
+        let resp = await rsp.json();
         let localInfo:any={
             ip:resp['data']['ip'],
             isp:resp['data']['isp'],
@@ -92,7 +98,14 @@ const nullInfo:any={
                 "isChinaMainland": true,
                 "province": "",
                 "city": "",
-                
+                "area": ""
+                }
+async function watchLocalIp() {
+    if(props.isVisible){
+        try {
+            const response = await fetch('https://forge.speedtest.cn/api/location/info', { referrerPolicy: 'no-referrer' });
+            let resp = await response.json();
+            let localInfo:any=await cacheCtr(resp['ip'])
             info['localInfo']=localInfo
         } catch (error) {
             if(error=='获取本地IP失败'){
@@ -108,7 +121,11 @@ const nullInfo:any={
 async function getGlobalIp() {
     if(props.isVisible){
         try {
-            
+            const response = await  fetch('https://api-ipv4.ip.sb/geoip', { referrerPolicy: 'no-referrer' });
+            let resp = await response.json();
+            let globalInfo:any={
+                ip:resp['ip'],
+                isp:resp['isp'],
                 country:CountryCode[resp['country_code'] as keyof typeof CountryCode],
             }
             info['globalInfo']=globalInfo
